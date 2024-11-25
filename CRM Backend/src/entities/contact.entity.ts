@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Activity } from './activity.entity';
 
 @Entity('contacts')
 export class Contact {
@@ -37,4 +38,7 @@ export class Contact {
 
   @Column({ type: 'text', nullable: true })
   note?: string;
+
+  @OneToMany(() => Activity, (activity) => activity.contact)
+  activities: Activity[];
 }

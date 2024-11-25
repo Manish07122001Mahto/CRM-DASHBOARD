@@ -8,36 +8,36 @@ import { Repository } from 'typeorm';
 export class ContactService {
   constructor(
     @InjectRepository(Contact) // Inject Contact repository to interact with the DB
-    private userRepository: Repository<Contact>,
+    private contactRepository: Repository<Contact>,
   ) {}
 
   async addContact(createUserDto: CreateContactDto): Promise<Contact> {
-    const newUser = this.userRepository.create(createUserDto); // Map DTO to entity
-    return await this.userRepository.save(newUser); // Save to DB
+    const newUser = this.contactRepository.create(createUserDto); // Map DTO to entity
+    return await this.contactRepository.save(newUser); // Save to DB
   }
 
   async findAll(query: any): Promise<Contact[]> {
-    return await this.userRepository.find({ where: query });
+    return await this.contactRepository.find({ where: query });
   }
 
   async findOne(id: number): Promise<Contact> {
-    return await this.userRepository.findOne({ where: { id } });
+    return await this.contactRepository.findOne({ where: { id } });
   }
 
   async update(
     id: number,
     updateContactDto: UpdateContactDto,
   ): Promise<Contact> {
-    const contact = await this.userRepository.findOne({ where: { id } });
+    const contact = await this.contactRepository.findOne({ where: { id } });
     if (!contact) {
       throw new Error(`Contact with ID ${id} not found.`);
     }
     Object.assign(contact, updateContactDto);
-    return await this.userRepository.save(contact);
+    return await this.contactRepository.save(contact);
   }
 
   async delete(id: number): Promise<{ message: string }> {
-    const result = await this.userRepository.delete(id);
+    const result = await this.contactRepository.delete(id);
     if (result.affected === 0) {
       throw new Error(`Contact with ID ${id} not found.`);
     }

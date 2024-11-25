@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { envConfig } from './config/env.config';
 import { databaseConfig } from './config/database.config';
 import { ContactModule } from './contacts/contact.module';
+import { ActivityModule } from './activity/activity.module';
 
 @Module({
   imports: [
     envConfig, // Use the envConfig to load .env variables globally
     TypeOrmModule.forRoot(databaseConfig),
-    ContactModule, // Set up TypeORM with the configuration from database.config.ts
+    ContactModule,
+    ActivityModule, // Set up TypeORM with the configuration from database.config.ts
   ],
   controllers: [AppController],
   providers: [AppService],
