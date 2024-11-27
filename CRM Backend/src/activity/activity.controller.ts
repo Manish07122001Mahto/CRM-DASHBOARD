@@ -1,6 +1,6 @@
-import { Controller, Post, Get, Param, Body, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Delete, Patch } from '@nestjs/common';
 import { ActivityService } from './activity.service';
-import { CreateActivityDto } from 'src/dto/activity.dto';
+import { CreateActivityDto, UpdateActivityDto } from 'src/dto/activity.dto';
 
 @Controller('activities')
 export class ActivityController {
@@ -25,6 +25,15 @@ export class ActivityController {
   @Get()
   async findAll() {
     return this.activityService.findAll();
+  }
+
+  // Update an activity
+  @Patch(':id')
+  async updateActivity(
+    @Param('id') id: number,
+    @Body() updateActivityDto: UpdateActivityDto,
+  ) {
+    return this.activityService.updateActivity(id, updateActivityDto);
   }
 
   @Delete(':id')

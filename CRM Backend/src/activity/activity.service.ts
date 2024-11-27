@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Activity } from 'src/entities/activity.entity';
 import { Contact } from 'src/entities/contact.entity';
-import { CreateActivityDto } from 'src/dto/activity.dto';
+import { CreateActivityDto, UpdateActivityDto } from 'src/dto/activity.dto';
 
 @Injectable()
 export class ActivityService {
@@ -46,6 +46,25 @@ export class ActivityService {
     return this.activityRepository.find({
       relations: ['contact'],
     });
+  }
+
+  // Update an activity
+  async updateActivity(
+    id: number,
+    updateActivityDto: UpdateActivityDto,
+  ): Promise<Activity> {
+    const activity = await this.activityRepository.findOne({ where: { id } });
+
+    if (!activity) {
+      throw new Error(`Activity with ID ${id} not found.`);
+    }
+
+    const updatedActivity = this.activityRepository.merge(
+      activity,
+      updateActivityDto,
+    );
+
+    return this.activityRepository.save(updatedActivity);
   }
 
   async delete(id: number): Promise<void> {

@@ -1,3 +1,4 @@
+import { PartialType } from '@nestjs/mapped-types';
 import { IsString, IsDateString, IsOptional } from 'class-validator';
 
 export class CreateActivityDto {
@@ -19,3 +20,6 @@ export class CreateActivityDto {
   @IsOptional()
   assignedTo?: string;
 }
+
+// Update DTO
+export class UpdateActivityDto extends PartialType(CreateActivityDto) {}

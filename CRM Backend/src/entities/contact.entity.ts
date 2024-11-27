@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Activity } from './activity.entity';
+import { Deal } from './deal.entity';
 
 @Entity('contacts')
 export class Contact {
@@ -39,6 +40,11 @@ export class Contact {
   @Column({ type: 'text', nullable: true })
   note?: string;
 
+  // for activity.entity.ts
   @OneToMany(() => Activity, (activity) => activity.contact)
   activities: Activity[];
+
+  // for deals.entity.ts
+  @OneToMany(() => Deal, (deal) => deal.contact)
+  deals: Deal[];
 }
