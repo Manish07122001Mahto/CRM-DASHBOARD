@@ -1,21 +1,22 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { envConfig } from './config/env.config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { databaseConfig } from './config/database.config';
-import { ContactModule } from './contacts/contact.module';
-import { ActivityModule } from './activity/activity.module';
-import { DealModule } from './deal/deal.module';
-
+import { CompanyModule } from './modules/company/company.module';
+import { EmployeeModule } from './modules/employee/employee.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    envConfig, // Use the envConfig to load .env variables globally
+    envConfig,
     TypeOrmModule.forRoot(databaseConfig),
-    ContactModule,
-    ActivityModule,
-    DealModule,
+    CompanyModule,
+    EmployeeModule,
+    AuthModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
