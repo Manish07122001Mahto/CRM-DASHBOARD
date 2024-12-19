@@ -41,8 +41,6 @@ export class EmployeeController {
     return this.employeeService.getEmployeeById(employeeId, companyId);
   }
 
-  // @Roles(Role.SUPERADMIN, Role.ADMIN)
-  // @UseGuards(JwtAuthGuard, RolesGuard)
   @Put('update/:companyId/:employeeId')
   async updateEmployee(
     @Param('companyId') companyId: number,
@@ -56,8 +54,8 @@ export class EmployeeController {
     );
   }
 
-  // @Roles(Role.SUPERADMIN, Role.ADMIN)
-  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPERADMIN, Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete('delete/:companyId/:employeeId')
   async deleteEmployee(
     @Param('companyId') companyId: number,
