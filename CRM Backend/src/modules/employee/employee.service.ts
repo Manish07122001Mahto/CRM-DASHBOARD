@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreateEmployeeDto } from './dtos/employee.dto';
-import { createCompanyDataSource } from 'src/config/dataSource.config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from '../../entities/Local Entities/employee.entity';
-import * as bcrypt from 'bcrypt';
 import { UpdateEmployeeDto } from './dtos/updateEmployee.dto';
+import { getRepositoryForCompany } from 'src/utils/companyRepository.util';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class EmployeeService {
@@ -13,14 +13,6 @@ export class EmployeeService {
     @InjectRepository(Employee)
     private readonly employeeRepository: Repository<Employee>,
   ) {}
-
-  // Helper function to get the employee repository for a given companyId
-  private async getEmployeeRepositoryForCompany(
-    companyId: number,
-  ): Promise<Repository<Employee>> {
-    const companyDataSource = await createCompanyDataSource(companyId);
-    return companyDataSource.getRepository(Employee);
-  }
 
   async addEmployeeToCompany(
     createEmployeeDto: CreateEmployeeDto,
@@ -36,12 +28,30 @@ export class EmployeeService {
     }
 
     // Get the repository for the company schema
-    const employeeRepository =
-      await this.getEmployeeRepositoryForCompany(companyId);
+    const employeeRepository = await getRepositoryForCompany(
+      companyId,
+      Employee,
+    );
 
     // Create and save the employee entity
     const employee = employeeRepository.create(createEmployeeDto);
     return employeeRepository.save(employee);
+  }
+
+  async getEmployees(companyId: number): Promise<Employee[]> {
+    // Get the repository for the company schema
+    const employeeRepository = await getRepositoryForCompany(
+      companyId,
+      Employee,
+    );
+    // Find the employee by ID
+    const employees = await employeeRepository.find();
+
+    if (!employees) {
+      throw new NotFoundException('Employee not found');
+    }
+
+    return employees;
   }
 
   async getEmployeeById(
@@ -49,8 +59,10 @@ export class EmployeeService {
     companyId: number,
   ): Promise<Employee> {
     // Get the repository for the company schema
-    const employeeRepository =
-      await this.getEmployeeRepositoryForCompany(companyId);
+    const employeeRepository = await getRepositoryForCompany(
+      companyId,
+      Employee,
+    );
     // Find the employee by ID
     const employee = await employeeRepository.findOne({
       where: { employee_id: employeeId },
@@ -69,8 +81,10 @@ export class EmployeeService {
     updateEmployeeDto: UpdateEmployeeDto,
   ): Promise<Employee> {
     // Get the repository for the company schema
-    const employeeRepository =
-      await this.getEmployeeRepositoryForCompany(companyId);
+    const employeeRepository = await getRepositoryForCompany(
+      companyId,
+      Employee,
+    );
 
     // Find the existing employee
     const existingEmployee = await employeeRepository.findOne({
@@ -102,8 +116,10 @@ export class EmployeeService {
 
   async deleteEmployee(employeeId: number, companyId: number): Promise<void> {
     // Get the repository for the company schema
-    const employeeRepository =
-      await this.getEmployeeRepositoryForCompany(companyId);
+    const employeeRepository = await getRepositoryForCompany(
+      companyId,
+      Employee,
+    );
 
     // Find the employee
     const employee = await employeeRepository.findOne({

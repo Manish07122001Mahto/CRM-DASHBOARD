@@ -1,4 +1,4 @@
-// DTO for updating a contact
+// DTO for updating a employee
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateEmployeeDto } from './employee.dto';
 

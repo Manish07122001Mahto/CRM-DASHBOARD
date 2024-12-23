@@ -33,8 +33,13 @@ export class EmployeeController {
     );
   }
 
+  @Get(':companyId')
+  async getEmployees(@Param('companyId') companyId: number) {
+    return this.employeeService.getEmployees(companyId);
+  }
+
   @Get(':companyId/:employeeId')
-  async getEmployee(
+  async getEmployeeById(
     @Param('companyId') companyId: number,
     @Param('employeeId') employeeId: number,
   ) {
